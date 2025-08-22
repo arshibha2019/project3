@@ -37,17 +37,18 @@ pipeline{
                     dir('tf-aws-eks'){
                         sh 'terraform plan -var-file=variables/dev.tfvars'
                     }
+                    input(message: "Are you sure to proceed?", ok: "Proceed")
                 }
             }
         }
-        stage('Terraform Apply'){
+        stage('Creating/Destroying EKS Cluster'){
             steps {
                 script {
                     dir('tf-aws-eks'){
-                        sh 'terraform apply -var-file=variables/dev.tfvars'
+                        sh 'terraform $action -var-file=variables/dev.tfvars -auto-approve' 
                     }
                 }
             }
-        }     
+        }
     }
 }
